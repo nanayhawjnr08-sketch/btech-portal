@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BTech Computer Engineering Portal</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+<div id="login-page">
+  <div class="login-box">
+    <h1>BTech Comp. Eng.</h1>
+    <p>Class Portal 2026</p>
+    <div class="tabs"><button id="tab-student" class="active" onclick="switchTab('student')">Student</button><button id="tab-lecturer" onclick="switchTab('lecturer')">Lecturer / Rep</button></div>
+    <input id="identifier" placeholder="Reg No: BTECH/COMP/001">
+    <input id="password" type="password" placeholder="Password">
+    <button class="primary" onclick="login()">Login</button>
+    <small id="login-error"></small>
+    <div class="hint">Test Student: BTECH/COMP/024 / password123<br>Lecturer: lecturer@btech.edu.gh / password123<br>Rep: rep@btech.edu.gh / password123</div>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+  <header><h2 id="welcome">Welcome</h2><button onclick="logout()">Logout</button></header>
+  <nav>
+  <button onclick="showView('notes')">📚 Notes</button>
+  <button onclick="showView('attendance')">📋 Attendance</button>
+  <button onclick="showView('chat')">💬 Live Chat</button>
+  <button onclick="showView('students')" id="students-tab">👥 Students</button>
+  <button onclick="showView('upload')" id="upload-tab">⬆️ Upload</button>
+</nav>
+
+  <section id="view-notes" class="view"><h3>Lecture Notes</h3><div id="notes-list"></div></section>
+
+  <section id="view-attendance" class="view hidden">
+    <h3 id="att-title">Attendance</h3>
+    <div id="lecturer-attendance-tools" class="hidden">
+      <input type="date" id="att-date"><input id="att-course" placeholder="Course Code e.g. COMP401"><button onclick="loadStudentsForAttendance()">Load Students</button>
+      <div id="attendance-sheet"></div>
+      <button class="primary" onclick="saveAttendance()">Save Attendance</button>
+    </div>
+    <div id="student-attendance-list"></div>
+  </section>
+<section id="view-chat" class="view hidden">
+  <h3>💬 Attendance Live Chat</h3>
+  <div id="chat-box" style="height:300px;overflow-y:auto;background:#f9f9ff;padding:10px;border-radius:10px;margin-bottom:10px"></div>
+  <small id="typing-indicator" style="color:#6a5cff"></small>
+  <div style="display:flex;gap:6px"><input id="chat-input" placeholder="Type message... e.g. Attendance for COMP401 ongoing" style="flex:1"><button onclick="sendChat()" class="primary" style="width:80px">Send</button></div>
+</section>
+
+<!-- PDF Preview Modal -->
+<div id="pdf-modal" class="hidden" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;padding:20px">
+  <div style="background:white;height:100%;border-radius:12px;overflow:hidden;display:flex;flex-direction:column"><div style="padding:10px;display:flex;justify-content:space-between;background:#6a5cff;color:white"><span id="pdf-title">Preview</span><button onclick="closePDF()" style="background:white;border:none;padding:5px 12px;border-radius:20px">Close X</button></div><iframe id="pdf-frame" style="flex:1;border:none"></iframe></div>
+</div>
+  <section id="view-students" class="view hidden"><h3>Class List - Reg No & Full Name</h3><div id="students-list"></div></section>
+
+  <section id="view-upload" class="view hidden">
+    <h3>Upload Lecture Note (Rep / Lecturer Only)</h3>
+    <input id="note-title" placeholder="Title e.g. Data Structures Ch1">
+    <input id="note-course" placeholder="Course Code e.g. COMP401">
+    <input type="file" id="note-file"><button class="primary" onclick="uploadNote()">Upload</button>
+  </section>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
+
